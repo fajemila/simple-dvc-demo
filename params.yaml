@@ -1,7 +1,7 @@
 base:
   project: wineqality-project
   random_state: 42
-  target_col: quality
+  target_col: TARGET
 
 data_source:
   s3_source: data_given\winequality.csv
@@ -24,4 +24,4 @@ model_dir: saved_models
 
 reports:
   params: report\params.json
-  score : report\scores.json
+  scores : report\scores.json
