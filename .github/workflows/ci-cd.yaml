@@ -1,4 +1,5 @@
 name: Python application
+
 on:
   push:
     branches:
@@ -6,9 +7,12 @@ on:
   pull_request:
     branches:
     - main
+
 jobs:
   build:
+
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v2
       with:
@@ -31,9 +35,11 @@ jobs:
     - name: Test with pytest
       run: |
         pytest -v
-    - name: Deploy to Heroku 
-    - uses: akhileshns/heroku-deploy@v3.12.12
-      with:
-        heroku_api_key: ${{ secrets.HEROKU_API_TOKEN }}
-        heroku_app_name: "wine-fajemila"
-        heroku_email: "fajemild@gmail.com"
+    - name: Deploy to Heroku
+      env:
+        HEROKU_API_TOKEN: ${{ secrets.HEROKU_API_TOKEN }}
+        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+      if: github.ref == 'refs/heads/main' && job.status == 'success'
+      run: |
+        git remote add heroku https://heroku:$HEROKU_API_TOKEN@git.heroku.com/$HEROKU_APP_NAME.git
+        git push heroku HEAD:main -f
